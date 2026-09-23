@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PL-MPC: Beyond Policy Alignment. Closing the planning–learning loop for robot control with learned world models. Humanoid control and zero-shot sim-to-real wrench–nut alignment.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#772583">
+  <meta property="og:title" content="PL-MPC — Beyond Policy Alignment">
+  <meta property="og:description" content="Closing the planning–learning loop for robot control with learned world models. Under review at ICRA 2027.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://icra27-pl-mpc.github.io/">
+  <meta property="og:image" content="https://icra27-pl-mpc.github.io/static/images/video-poster.webp">
+  <title>PL-MPC | Beyond Policy Alignment</title>
+  <link rel="icon" href="static/images/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="static/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="static/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="static/css/index.css?v=754d9af946">
+  <link rel="stylesheet" href="static/css/pl-mpc.css?v=8ff8eb5e2f">
+  <script src="static/js/app.js?v=c0f93a3930" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<!-- Presentation adapted from PL-MPC / Nerfies. See NOTICE.md. -->
+
+<nav class="site-navbar" aria-label="Main navigation"><div class="nav-inner">
+<a class="brand-text" href="#top" aria-label="PL-MPC home"><svg class="trace-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M25 11a11 11 0 1 0 1 10M25 4v8h-8"/><circle cx="26" cy="21" r="3"/></svg>PL-MPC<span class="brand-dot">.</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">Menu <span aria-hidden="true">☰</span></button>
+<div class="navbar-menu" id="nav-menu"><a href="#abstract">Abstract</a><a href="#problem">Problem</a><a href="#method">Architecture</a><a href="#comparisons">Demos</a><a href="#results">Results</a><a class="nav-code" href="#resources">↗ Paper &amp; resources</a></div>
+</div></nav>
+<main id="main">
+<header class="hero-head-section" id="top"><div class="container hero-body">
+<div class="hero-meta"><span class="venue-pill"><span class="status-dot"></span> Under review at ICRA 2027</span><span class="meta-divider"></span><span>Robot learning · Model predictive control</span></div>
+<p class="trace-wordmark" aria-hidden="true">PL-MPC<span>.</span></p>
+<h1 class="publication-title">Beyond Policy Alignment:<br>Closing the Planning–Learning Loop for Robot Control<br class="desktop-break"> with Learned World Models</h1>
+<p class="acronym"><strong>P</strong>lanning–<strong>L</strong>earning <strong>M</strong>odel <strong>P</strong>redictive <strong>C</strong>ontrol <span class="author-separator">/</span> Anonymous Authors</p>
+<p class="hero-description">Policy alignment addresses one part of the planning–learning loop.<br class="desktop-break"> PL-MPC modifies critic supervision, terminal-value evaluation, and planner-to-policy transfer.</p>
+<div class="publication-links"><a class="button primary" href="#overview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 11 7-11 7Z"/></svg>Watch the film <span class="button-detail">2:59</span></a><a class="button secondary" href="static/paper/pl-mpc.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H5v18h14V8Zm0 0v5h5M8 12h8M8 16h6"/></svg>Read the paper <span aria-hidden="true">↗</span></a><a class="text-link" href="#resources">Code &amp; data <span aria-hidden="true">↗</span></a></div>
+<div class="hero-bottom"><span>PLAN → EXECUTE</span><span class="connecting-line"></span><span>LEARN → REPLAN</span></div>
+</div></header>
+<section class="overview-section" id="overview" aria-labelledby="overview-heading"><div class="container">
+<div class="section-topline"><h2 id="overview-heading">The whole story, in three minutes.</h2><span class="eyebrow">Supplementary film / 01</span></div>
+<div class="film-frame"><div class="film-top"><span><span class="live-dot"></span> PL-MPC IN ACTION</span><span>HumanoidBench · Zero-shot sim-to-real</span></div>
+<video id="overview-video" controls playsinline preload="none" poster="static/images/video-poster.webp" aria-label="PL-MPC narrated supplementary film, 2 minutes 59 seconds" aria-describedby="film-caption"><source src="static/video/pl-mpc-overview.mp4" type="video/mp4"><track kind="captions" src="static/video/pl-mpc-overview.vtt" srclang="en" label="English">Your browser does not support embedded video. <a href="static/video/pl-mpc-overview.mp4">Download the film.</a></video>
+<div class="film-chapters" aria-label="Video chapters"><button type="button" data-seek="4"><span>00:04</span> The planning loop</button><button type="button" data-seek="44"><span>00:44</span> Three mechanisms</button><button type="button" data-seek="91"><span>01:31</span> Humanoid control</button><button type="button" data-seek="139"><span>02:19</span> Real robot</button></div></div>
+<div class="film-caption" id="film-caption"><p>Three mechanisms, successful humanoid behaviors, and zero-shot sim-to-real transfer.</p><a href="static/video/pl-mpc-overview.mp4" download>Download video ↓</a></div>
+<details class="transcript"><summary>Read the video transcript</summary><div id="video-transcript">
+<p>We present PL-MPC: closing the planning–learning loop.</p>
+<p>TD-MPC plans robot actions using a learned world model. The model predicts action outcomes, while a critic estimates return beyond the planning horizon. The robot executes one action, then replans.</p>
+<p>The policy proposes actions. Aligning it with the planner leaves three issues: delayed reward propagation, uncertain terminal values, and differences in episode quality.</p>
+<p>Our method modifies all three interfaces, retaining the world-model architecture and MPPI optimizer.</p>
+<p>Prior methods use one-step targets; we use hybrid multi-step targets.</p>
+<p>Experience updates the world model, critic, and policy, guiding future plans.</p>
+<p>In this illustration, one trajectory falls while the other survives. Multi-step targets propagate later rewards sooner, helping the critic sharpen the fall–survival boundary. Model predictions complete targets beyond replay.</p>
+<p>After crossing a hurdle, a planned trajectory may enter a less-visited region. When target critics disagree there, ATE penalizes the online terminal value, reducing reliance on uncertain estimates.</p>
+<p>RAD gives stronger imitation weight to higher-return episodes, using realized returns rather than critic estimates. Warmup delays this additional loss, allowing the planner to collect useful trajectories first.</p>
+<p>On balance-hard, the best seed reaches fifty point nine percent success, versus zero for the baseline seeds. The planner unlocks full-episode balancing, beyond simply raising mean return.</p>
+<p>On hurdle, the best seed reaches fifty-eight percent success, versus zero for the baseline seeds. The planner clears successive obstacles and completes the task—a qualitative change in behavior.</p>
+<p>On other HumanoidBench tasks, performance remains competent, with especially large gains on hard tasks such as balance-hard and hurdle.</p>
+<p>In Isaac Gym, these representative wrench–nut alignment trials compare PL-MPC and the baseline across initial object configurations.</p>
+<p>The world model learned in Isaac Gym is deployed with online planning on the real KUKA robot: zero-shot sim-to-real transfer. Contact requires closed-loop realignment.</p>
+<p>Additional PL-MPC trials show different initial configurations, including an unseen object size. Planning uses the simulation-trained world model, without real-world fine-tuning.</p>
+<p>The same simulation-trained models support planning for two unseen object sizes, with higher observed success.</p>
+<p>Closing the planning–learning loop.</p>
+</div></details>
+<div class="metrics-strip" aria-label="Key results">
+<div><strong>50.9<span>%</span></strong><h3>Full-episode balancing</h3><p>Best-seed success · balance-hard</p></div>
+<div><strong>58.0<span>%</span></strong><h3>Hurdle task success</h3><p>Best-seed success · hurdle</p></div>
+<div><strong>74.2<span>%</span></strong><h3>Real-robot success</h3><p>Observed success · training size</p></div>
+<div><strong>0</strong><h3>Real-world fine-tuning</h3><p>Simulation-trained world model</p></div>
+</div><p class="metrics-note">Humanoid success is shown for the best of three seeds. Mean success is 19% on each task, compared with 0% for the matched TD-M(PC)<sup>2</sup> baseline.</p>
+</div></section>
+<section class="abstract-section" id="abstract" aria-labelledby="abstract-heading"><div class="container abstract-grid"><div class="abstract-heading"><p class="eyebrow">RESEARCH OVERVIEW</p><h2 id="abstract-heading">Abstract</h2><p>Planning generates experience.<br>Learning shapes future plans.</p><a class="text-link" href="static/paper/pl-mpc.pdf" target="_blank" rel="noopener">Read the full manuscript ↗</a></div><div class="abstract-copy">
+<p>Planning with learned world models combines online trajectory optimization with learned value and policy functions for high-dimensional control. The planner determines the experience used for learning, while the critic and actor score and propose future plans. Recent policy-constrained TD-MPC variants strengthen one part of this feedback loop by aligning the learned policy with planner behavior.</p>
+<p>We introduce <strong>PL-MPC (Planning–Learning MPC)</strong>, which additionally modifies critic supervision and planner terminal-value estimation. <strong>Hybrid multi-step TD targets</strong> expose critic updates to more realized rewards before bootstrapping. <strong>Adaptive terminal estimates</strong> use target-critic disagreement to reduce the influence of uncertain terminal values during MPPI planning. <strong>Return-weighted actor distillation</strong> emphasizes planner-executed actions from higher-return episodes. The world-model architecture and MPPI optimizer remain unchanged.</p>
+<p>The largest gains over TD-M(PC)<sup>2</sup> occur on HumanoidBench <strong>balance-hard</strong>, where Total Average Return (TAR) increases from 98 ± 18 to 387 ± 255, and <strong>hurdle</strong>, from 199 ± 13 to 466 ± 200. Broader benchmark performance remains task dependent, and PL-MPC remains competitive on DMControl. Controlled ablations show different component interactions across the two tasks. We further demonstrate <strong>zero-shot sim-to-real wrench–nut alignment</strong> on a 7-DoF KUKA iiwa14, with higher observed success than TD-M(PC)<sup>2</sup> on the training object size and two unseen sizes.</p>
+</div></div></section>
+<section class="section problem-section" id="problem"><div class="container">
+<p class="eyebrow"><span class="section-number">01</span> THE PROBLEM</p><div class="section-heading-row"><h2>Policy alignment is<br>only part of the loop.</h2><p class="section-intro">TD-MPC uses a world model to predict outcomes, a critic to estimate future return, and a policy to propose actions. The robot executes one action, then replans.</p></div>
+<div class="loop-ribbon" aria-label="Planning and learning feedback loop"><span><b>01</b> Plan actions</span><span aria-hidden="true">→</span><span><b>02</b> Execute &amp; collect</span><span aria-hidden="true">→</span><span><b>03</b> Learn from replay</span><span aria-hidden="true">↻</span></div>
+<div class="method-steps problem-steps"><article><span class="step-label">01 / CRITIC SUPERVISION</span><h3>Later rewards need<br>more updates to propagate.</h3><p>One-step TD incorporates only the immediate observed reward before bootstrapping. Later rewards affect earlier values through subsequent updates.</p></article><article><span class="step-label">02 / TERMINAL-VALUE EVALUATION</span><h3>Uncertain terminal values<br>can change the plan.</h3><p>The critic scores the end of model-generated trajectories. Uncertain terminal estimates can change their ranking and the experience collected next.</p></article><article><span class="step-label">03 / PLANNER-TO-POLICY TRANSFER</span><h3>Planner episodes<br>vary in quality.</h3><p>Policy alignment alone need not distinguish planner-generated episodes by their realized outcomes.</p></article></div>
+<div class="question-callout"><span aria-hidden="true">↳</span><p>PL-MPC addresses <strong>all three interfaces</strong> within the same planning–learning loop.</p></div>
+</div></section>
+<section class="section related-section" id="related-work"><div class="container">
+<p class="eyebrow"><span class="section-number">02</span> RELATED WORK</p><div class="section-heading-row"><h2>Where PL-MPC fits.</h2><p class="section-intro">PL-MPC builds on planner–policy alignment and also changes critic supervision and the terminal values used to rank MPPI trajectories. Its three mechanisms act at distinct interfaces in the same loop.</p></div>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Method comparison, scroll horizontally"><table class="results-table related-table"><caption>Policy learning, critic targets, and terminal-value evaluation</caption><thead><tr><th scope="col">Method</th><th scope="col">Policy learning</th><th scope="col">TD targets</th><th scope="col">Terminal value</th></tr></thead><tbody>
+<tr><th scope="row"><a href="https://arxiv.org/abs/2502.03550" target="_blank" rel="noopener">TD-M(PC)<sup>2</sup> ↗</a></th><td>Planner constraint</td><td>One-step TD</td><td>Q bootstrap</td></tr>
+<tr><th scope="row"><a href="https://arxiv.org/abs/2503.18871" target="_blank" rel="noopener">BMPC ↗</a></th><td>Expert imitation + lazy reanalysis</td><td>One-step TD (model-based)</td><td>Value bootstrap</td></tr>
+<tr><th scope="row"><a href="https://arxiv.org/abs/2511.00423" target="_blank" rel="noopener">BOOM ↗</a></th><td>Q-weighted imitation</td><td>One-step TD</td><td>Q bootstrap</td></tr>
+<tr><th scope="row"><a href="https://arxiv.org/abs/2510.04280" target="_blank" rel="noopener">PO-MPC ↗</a></th><td>KL-regularized RL + adaptive prior</td><td>One-step TD</td><td>Q bootstrap</td></tr>
+<tr class="highlight-row"><th scope="row">PL-MPC <span>Ours</span></th><td>Constraint + episode-return weighting</td><td><strong>Hybrid multi-step TD</strong><br>Replay + model predictions</td><td>Q bootstrap − disagreement penalty</td></tr>
+</tbody></table></div><p class="table-note">BMPC’s general formulation permits N-step targets; its reported setup uses N = 1. PO-MPC additionally uses a KL-regularized auxiliary critic for policy improvement.</p>
+</div></section>
+<section class="section method-section" id="method"><div class="container">
+<p class="eyebrow"><span class="section-number">03</span> THE ARCHITECTURE</p><div class="section-heading-row"><h2>Close the<br>planning–learning loop.</h2><p class="section-intro">PL-MPC extends the policy-constrained TD-M(PC)² backbone at three interfaces, using the same latent world model, critic architecture, and MPPI optimizer.</p></div>
+<div class="architecture-block"><div class="architecture-header"><h3>From plans to experience, and back.</h3><div class="segmented-control" role="tablist" aria-label="Architecture detail"><button type="button" role="tab" id="loop-tab" aria-controls="loop-panel" aria-selected="true" tabindex="0">The loop</button><button type="button" role="tab" id="mtd-tab" aria-controls="mtd-panel" aria-selected="false" tabindex="-1">1 · MTD</button><button type="button" role="tab" id="ate-tab" aria-controls="ate-panel" aria-selected="false" tabindex="-1">2 · ATE</button><button type="button" role="tab" id="rad-tab" aria-controls="rad-panel" aria-selected="false" tabindex="-1">3 · RAD</button></div></div>
+
+<div id="loop-panel" role="tabpanel" aria-labelledby="loop-tab"><p class="architecture-intro"><strong>Planning generates the experience that shapes future plans.</strong> The actor proposes candidate actions, and MPPI scores short model rollouts using predicted rewards and a terminal critic value. Replayed experience updates the world model, critic, and actor, which return to the planner for the next decision.</p><figure class="paper-figure "><button class="figure-zoom" type="button" data-figure="static/images/planning-loop.webp" data-title="The PL-MPC planning–learning loop" aria-label="Enlarge The PL-MPC planning–learning loop"><img src="static/images/planning-loop.webp" alt="Environment feeds replay; replay trains the world model and critic with MTD and the actor with RAD; model and terminal values return to the MPPI planner with ATE." width="2273" height="793" loading="lazy"><span class="zoom-label">View figure ↗</span></button><figcaption><strong>Plan → execute → learn → replan.</strong> MTD changes critic supervision, ATE changes terminal-value evaluation, and RAD changes planner-to-policy transfer.</figcaption></figure></div>
+<div id="mtd-panel" role="tabpanel" aria-labelledby="mtd-tab"><p class="architecture-intro"><strong>Hybrid multi-step TD targets (MTD)</strong> bring later observed rewards directly into earlier critic targets. Rewards from planner-generated replay are used where available. When a target extends beyond the sampled replay slice, the learned model predicts the remaining rewards and states under the current actor, followed by a terminal critic bootstrap.</p><figure class="paper-figure "><button class="figure-zoom" type="button" data-figure="static/images/mtd.webp" data-title="Hybrid multi-step TD targets" aria-label="Enlarge Hybrid multi-step TD targets"><img src="static/images/mtd.webp" alt="Illustrative falling and surviving trajectories, schematic one-step and three-step value separation, and hybrid target rows with observed/model reward counts 3/0, 2/1, and 1/2." width="2268" height="955" loading="lazy"><span class="zoom-label">View figure ↗</span></button><figcaption><strong>Distinguishing falling from surviving.</strong> The schematic illustrates how later rewards reach earlier targets. With n = H = 3, the target rows combine observed rewards with a model-predicted tail.</figcaption></figure></div>
+<div id="ate-panel" role="tabpanel" aria-labelledby="ate-tab"><p class="architecture-intro"><strong>Adaptive terminal estimates (ATE)</strong> use disagreement among target critics to penalize the online-critic terminal value at the end of each candidate rollout. MPPI uses this adjusted value to rank trajectories, reducing reliance on uncertain estimates. The TD targets remain unchanged.</p><figure class="paper-figure "><button class="figure-zoom" type="button" data-figure="static/images/ate.webp" data-title="Adaptive terminal estimates" aria-label="Enlarge Adaptive terminal estimates"><img src="static/images/ate.webp" alt="Hurdle crossing can lead to less-visited terminal states. Target-critic disagreement produces a smaller or larger penalty on the online terminal score." width="2268" height="863" loading="lazy"><span class="zoom-label">View figure ↗</span></button><figcaption><strong>Reduce reliance on uncertain terminal values.</strong> After a hurdle crossing, a rollout may enter a less-visited region. Target-critic disagreement serves as the uncertainty proxy for the terminal-value penalty.</figcaption></figure></div>
+<div id="rad-panel" role="tabpanel" aria-labelledby="rad-tab"><p class="architecture-intro"><strong>Return-weighted actor distillation (RAD)</strong> adds imitation of planner-executed actions, weighted by the source episode’s realized return rather than the current critic’s estimate. A fixed warmup delays this additional loss, allowing useful planner experience to accumulate while the backbone actor objective remains active.</p><figure class="paper-figure "><button class="figure-zoom" type="button" data-figure="static/images/rad.webp" data-title="Return-weighted actor distillation" aria-label="Enlarge Return-weighted actor distillation"><img src="static/images/rad.webp" alt="Higher realized episode return increases imitation weight, which is clipped. Additional weighted actor imitation begins after a fixed warmup." width="2268" height="973" loading="lazy"><span class="zoom-label">View figure ↗</span></button><figcaption><strong>Higher-return episodes receive stronger imitation weights.</strong> Weights are clipped to limit the influence of outliers and are held fixed during the actor update.</figcaption></figure></div>
+</div><p class="table-note"><a class="text-link" href="static/images/architecture.webp" target="_blank" rel="noopener">Open the complete architecture figure ↗</a></p><div class="method-steps mechanism-summary"><article><span class="step-label">01 / MTD</span><h3>Hybrid multi-step<br>TD targets</h3><p>Later observed rewards enter earlier critic updates, accelerating reward propagation.</p><a class="step-foot" href="#mtd-panel" data-open-tab="mtd">Explore critic supervision ↗</a></article><article><span class="step-label">02 / ATE</span><h3>Adaptive<br>terminal estimates</h3><p>Target-critic disagreement tempers the terminal values used to score candidate plans.</p><a class="step-foot" href="#ate-panel" data-open-tab="ate">Explore terminal estimates ↗</a></article><article><span class="step-label">03 / RAD</span><h3>Return-weighted<br>actor distillation</h3><p>Realized episode returns weight the additional imitation of planner-executed actions.</p><a class="step-foot" href="#rad-panel" data-open-tab="rad">Explore actor distillation ↗</a></article></div>
+</div></section>
+
+<section class="section comparison-section" id="comparisons"><div class="container">
+<p class="eyebrow"><span class="section-number">04</span> HUMANOID CONTROL</p><div class="section-heading-row"><h2>From survival to<br>task completion.</h2><p class="section-intro">HumanoidBench’s survival reward can produce return without task completion. On balance-hard and hurdle, successful PL-MPC seeds achieve full-episode balancing and hurdle traversal, while matched baseline seeds remain at 0% success.</p></div>
+<nav class="story-nav" aria-label="Jump to demonstration"><a href="#balance-hard"><span>01</span> Balance-hard</a><a href="#hurdle"><span>02</span> Hurdle</a><a href="#other-tasks"><span>03</span> More tasks</a><a class="ours" href="#robot"><span>04</span> Real robot</a></nav>
+<article class="method-story" id="balance-hard"><div class="story-copy"><p class="story-kicker">01 / HUMANOIDBENCH</p><h3>Full-episode<br>balancing.</h3><p class="story-hook">Balance-hard / moving support</p><p>The board and pivot shift beneath the humanoid. Success requires maintaining balance for the full 1,000-step episode.</p><div class="limitation"><span>THE BEHAVIORAL CHANGE</span><p>PL-MPC maintains balance through the full episode in the execution shown; TD-M(PC)<sup>2</sup> falls.</p></div><div class="story-stats"><div><strong>50.9<small>%</small></strong><span>PL-MPC · best-seed success</span></div><div><strong>0<small>%</small></strong><span>Matched baseline seeds</span></div></div><span class="information-tag">TAR: 387 ± 255 vs. 98 ± 18 · Mean success: 19% vs. 0%</span></div><div class="demo-pair" id="balance-pair" data-pair><div class="pair-videos"><figure class="demo-clip"><div class="clip-label"><strong>PL-MPC</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/balance_hard_ours_succ_video1-poster.webp" aria-label="PL-MPC: Success"><source src="static/data/videos/balance_hard_ours_succ_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/balance_hard_ours_succ_video1.mp4">Download this clip</a>.</video></figure><figure class="demo-clip"><div class="clip-label"><strong>TD-M(PC)<sup>2</sup></strong><span class="outcome ">Falls</span></div><video controls playsinline muted preload="none" poster="static/images/balance_hard_tdmpc_square_fail_video1-poster.webp" aria-label="TD-M(PC)2: Falls"><source src="static/data/videos/balance_hard_tdmpc_square_fail_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/balance_hard_tdmpc_square_fail_video1.mp4">Download this clip</a>.</video></figure></div><div class="pair-controls"><button type="button" data-play-pair>Play both ↗</button><button type="button" data-restart-pair>Restart both ↺</button><span>Playback · 1×</span></div></div></article>
+<article class="method-story" id="hurdle"><div class="story-copy"><p class="story-kicker">02 / HUMANOIDBENCH</p><h3>Successive<br>hurdle traversal.</h3><p class="story-hook">Hurdle / successive obstacles</p><p>The humanoid must traverse a sequence of hurdles while maintaining forward motion. Contact demands recovery before the next obstacle.</p><div class="limitation"><span>THE BEHAVIORAL CHANGE</span><p>PL-MPC clears successive hurdles and completes the task in the execution shown; TD-M(PC)<sup>2</sup> falls.</p></div><div class="story-stats"><div><strong>58.0<small>%</small></strong><span>PL-MPC · best-seed success</span></div><div><strong>0<small>%</small></strong><span>Matched baseline seeds</span></div></div><span class="information-tag">TAR: 466 ± 200 vs. 199 ± 13 · Mean success: 19% vs. 0%</span></div><div class="demo-pair" id="hurdle-pair" data-pair><div class="pair-videos"><figure class="demo-clip"><div class="clip-label"><strong>PL-MPC</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/hurdle_ours_succ_video1-poster.webp" aria-label="PL-MPC: Success"><source src="static/data/videos/hurdle_ours_succ_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/hurdle_ours_succ_video1.mp4">Download this clip</a>.</video></figure><figure class="demo-clip"><div class="clip-label"><strong>TD-M(PC)<sup>2</sup></strong><span class="outcome ">Falls</span></div><video controls playsinline muted preload="none" poster="static/images/hurdle_tdmpc_square_fail_video1-poster.webp" aria-label="TD-M(PC)2: Falls"><source src="static/data/videos/hurdle_tdmpc_square_fail_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/hurdle_tdmpc_square_fail_video1.mp4">Download this clip</a>.</video></figure></div><div class="pair-controls"><button type="button" data-play-pair>Play both ↗</button><button type="button" data-restart-pair>Restart both ↺</button><span>Playback · 1×</span></div></div></article>
+<div id="other-tasks" class="more-demos"><div class="section-heading-row"><h3>Other HumanoidBench tasks.</h3><p class="section-intro">PL-MPC also learns running, crawling, balancing, and other locomotion behaviors. The largest improvements over the backbone occur on balance-hard and hurdle.</p></div><div class="rollout-grid">
+<figure class="demo-clip"><div class="clip-label"><strong>Run</strong><span class="outcome "></span></div><video controls playsinline muted preload="none" poster="static/images/run_ours_succ_video1-poster.webp" aria-label="Run: representative rollout"><source src="static/data/videos/run_ours_succ_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/run_ours_succ_video1.mp4">Download this clip</a>.</video></figure>
+<figure class="demo-clip"><div class="clip-label"><strong>Crawl</strong><span class="outcome "></span></div><video controls playsinline muted preload="none" poster="static/images/crawl_ours_succ_video1-poster.webp" aria-label="Crawl: representative rollout"><source src="static/data/videos/crawl_ours_succ_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/crawl_ours_succ_video1.mp4">Download this clip</a>.</video></figure>
+<figure class="demo-clip"><div class="clip-label"><strong>Balance-simple</strong><span class="outcome "></span></div><video controls playsinline muted preload="none" poster="static/images/balance_simple_ours_succ_video1-poster.webp" aria-label="Balance-simple: representative rollout"><source src="static/data/videos/balance_simple_ours_succ_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/balance_simple_ours_succ_video1.mp4">Download this clip</a>.</video></figure>
+<figure class="demo-clip"><div class="clip-label"><strong>Pole</strong><span class="outcome "></span></div><video controls playsinline muted preload="none" poster="static/images/pole_ours_succ_video1-poster.webp" aria-label="Pole: representative rollout"><source src="static/data/videos/pole_ours_succ_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/pole_ours_succ_video1.mp4">Download this clip</a>.</video></figure>
+<figure class="demo-clip"><div class="clip-label"><strong>Slide</strong><span class="outcome "></span></div><video controls playsinline muted preload="none" poster="static/images/slide_ours_succ_video1-poster.webp" aria-label="Slide: representative rollout"><source src="static/data/videos/slide_ours_succ_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/slide_ours_succ_video1.mp4">Download this clip</a>.</video></figure>
+<figure class="demo-clip"><div class="clip-label"><strong>Sit-hard</strong><span class="outcome "></span></div><video controls playsinline muted preload="none" poster="static/images/sit_hard_ours_succ_video1-poster.webp" aria-label="Sit-hard: representative rollout"><source src="static/data/videos/sit_hard_ours_succ_video1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/sit_hard_ours_succ_video1.mp4">Download this clip</a>.</video></figure>
+</div></div><p class="comparison-footnote">Representative executions are shown. Best-seed success is labeled separately from mean success; TAR is mean ± SD across three seeds.</p>
+</div></section>
+<section class="section robot-section" id="robot"><div class="container">
+<p class="eyebrow"><span class="section-number">05</span> ZERO-SHOT SIM-TO-REAL</p><div class="section-heading-row"><h2>Learn in simulation.<br>Plan on the real robot.</h2><p class="section-intro">The world model learned in Isaac Gym is deployed for online planning on a KUKA iiwa14, without real-world fine-tuning. The same simulation-trained models also transfer to two unseen object sizes.</p></div>
+<div class="robot-intro"><div><p class="lead">Contact changes the target.<br>The robot must realign.</p><p>A grasped wrench must seat around a nut on an upright bolt. Contact can rotate the nut, changing the desired wrench pose during execution. Closed-loop planning corrects the alignment.</p><div class="hardware-tags"><span>7-DoF KUKA iiwa14</span><span>Robotiq 3-Finger gripper</span><span>RealSense D435</span><span>FoundationPose</span></div><dl class="setup-explainer"><div><dt>01 / Train in Isaac Gym</dt><dd>Learn the world model entirely in simulation, with randomized initial object configurations and observation noise.</dd></div><div><dt>02 / Deploy the learned world model</dt><dd>Use the simulation-trained world model for online MPC, with RGB-D pose feedback for closed-loop realignment.</dd></div><div><dt>03 / Transfer to unseen sizes</dt><dd>Train on size 5, then deploy the same models on sizes 3 and 1 without additional training.</dd></div></dl></div><figure class="paper-figure "><button class="figure-zoom" type="button" data-figure="static/images/hardware-setup.webp" data-title="Wrench–nut alignment hardware" aria-label="Enlarge Wrench–nut alignment hardware"><img src="static/images/hardware-setup.webp" alt="KUKA iiwa14, Robotiq 3-Finger gripper, fixed RealSense D435 camera, and wrench–nut task setup." width="1185" height="1199" loading="lazy"><span class="zoom-label">View figure ↗</span></button><figcaption><strong>Zero-shot wrench–nut alignment.</strong> Contact can rotate the nut during execution, requiring the robot to correct the wrench pose.</figcaption></figure></div>
+<div class="hardware-browser"><p class="gallery-notice hardware-context">PL-MPC achieves higher observed success than TD-M(PC)<sup>2</sup> on the training size and both unseen sizes. The videos show representative executions; the percentages summarize the evaluation.</p><div class="architecture-header"><h3>Alignment across object sizes.</h3><div class="segmented-control" role="tablist" aria-label="Hardware object size"><button type="button" role="tab" id="size5-tab" aria-controls="size5-panel" aria-selected="true" tabindex="0">Size 5 · trained</button><button type="button" role="tab" id="size3-tab" aria-controls="size3-panel" aria-selected="false" tabindex="-1">Size 3 · unseen</button><button type="button" role="tab" id="size1-tab" aria-controls="size1-panel" aria-selected="false" tabindex="-1">Size 1 · unseen</button></div></div>
+<div id="size5-panel" role="tabpanel" aria-labelledby="size5-tab"><div class="demo-pair" id="size5-pair" data-pair><div class="pair-videos"><figure class="demo-clip"><div class="clip-label"><strong>PL-MPC</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/2-ours-front-center-insertion-w5-poster.webp" aria-label="PL-MPC: Success"><source src="static/videos/real/2-ours-front-center-insertion-w5.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/videos/real/2-ours-front-center-insertion-w5.mp4">Download this clip</a>.</video></figure><figure class="demo-clip"><div class="clip-label"><strong>TD-M(PC)<sup>2</sup></strong><span class="outcome ">Timeout</span></div><video controls playsinline muted preload="none" poster="static/images/2-vanilla-front-center-insertion-w5-poster.webp" aria-label="TD-M(PC)2: Timeout"><source src="static/videos/real/2-vanilla-front-center-insertion-w5.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/videos/real/2-vanilla-front-center-insertion-w5.mp4">Download this clip</a>.</video></figure></div><div class="pair-controls"><button type="button" data-play-pair>Play both ↗</button><button type="button" data-restart-pair>Restart both ↺</button><span>Playback · 1×</span></div></div><div class="hardware-result"><strong>74.2% vs. 61.3%</strong><span>Observed success · PL-MPC vs. TD-M(PC)<sup>2</sup><br>Training size · 46 mm</span></div></div>
+<div id="size3-panel" role="tabpanel" aria-labelledby="size3-tab"><div class="demo-pair" id="size3-pair" data-pair><div class="pair-videos"><figure class="demo-clip"><div class="clip-label"><strong>PL-MPC</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/1-ours-center-center-insertion-w3-poster.webp" aria-label="PL-MPC: Success"><source src="static/videos/real/1-ours-center-center-insertion-w3.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/videos/real/1-ours-center-center-insertion-w3.mp4">Download this clip</a>.</video></figure><figure class="demo-clip"><div class="clip-label"><strong>TD-M(PC)<sup>2</sup></strong><span class="outcome ">Timeout</span></div><video controls playsinline muted preload="none" poster="static/images/1-vanilla-center-center-insertion-w3-poster.webp" aria-label="TD-M(PC)2: Timeout"><source src="static/videos/real/1-vanilla-center-center-insertion-w3.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/videos/real/1-vanilla-center-center-insertion-w3.mp4">Download this clip</a>.</video></figure></div><div class="pair-controls"><button type="button" data-play-pair>Play both ↗</button><button type="button" data-restart-pair>Restart both ↺</button><span>Playback · 1×</span></div></div><div class="hardware-result"><strong>80.0% vs. 73.3%</strong><span>Observed success · PL-MPC vs. TD-M(PC)<sup>2</sup><br>Unseen size · 36 mm</span></div></div>
+<div id="size1-panel" role="tabpanel" aria-labelledby="size1-tab"><div class="demo-pair" id="size1-pair" data-pair><div class="pair-videos"><figure class="demo-clip"><div class="clip-label"><strong>PL-MPC</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/1-ours-center-center-insertion-w1-poster.webp" aria-label="PL-MPC: Success"><source src="static/videos/real/1-ours-center-center-insertion-w1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/videos/real/1-ours-center-center-insertion-w1.mp4">Download this clip</a>.</video></figure><figure class="demo-clip"><div class="clip-label"><strong>TD-M(PC)<sup>2</sup></strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/1-vanilla-center-center-insertion-w1-poster.webp" aria-label="TD-M(PC)2: Success"><source src="static/videos/real/1-vanilla-center-center-insertion-w1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/videos/real/1-vanilla-center-center-insertion-w1.mp4">Download this clip</a>.</video></figure></div><div class="pair-controls"><button type="button" data-play-pair>Play both ↗</button><button type="button" data-restart-pair>Restart both ↺</button><span>Playback · 1×</span></div></div><div class="hardware-result"><strong>33.3% vs. 20.0%</strong><span>Observed success · PL-MPC vs. TD-M(PC)<sup>2</sup><br>Unseen size · 30 mm</span></div><p class="table-note">Both methods succeed in the size-1 executions shown.</p></div>
+</div><details class="dataset-details"><summary><span>Alignment across initial configurations</span><span class="detail-plus" aria-hidden="true">+</span></summary><div class="rollout-grid hardware-extras">
+<figure class="demo-clip"><div class="clip-label"><strong>PL-MPC · training size 5</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/1-ours-front-left-insertion-w5-poster.webp" aria-label="PL-MPC · training size 5: Success"><source src="static/videos/real/1-ours-front-left-insertion-w5.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/videos/real/1-ours-front-left-insertion-w5.mp4">Download this clip</a>.</video></figure>
+<figure class="demo-clip"><div class="clip-label"><strong>PL-MPC · training size 5</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/3-ours-front-right-insertion-w5-poster.webp" aria-label="PL-MPC · training size 5: Success"><source src="static/videos/real/3-ours-front-right-insertion-w5.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/videos/real/3-ours-front-right-insertion-w5.mp4">Download this clip</a>.</video></figure>
+<figure class="demo-clip"><div class="clip-label"><strong>PL-MPC · unseen size 3</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/2-ours-back-center-insertion-w3-poster.webp" aria-label="PL-MPC · unseen size 3: Success"><source src="static/videos/real/2-ours-back-center-insertion-w3.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/videos/real/2-ours-back-center-insertion-w3.mp4">Download this clip</a>.</video></figure>
+</div></details>
+<details class="dataset-details"><summary><span>Wrench–nut alignment in Isaac Gym</span><span class="detail-plus" aria-hidden="true">+</span></summary><p class="table-note">PL-MPC and TD-M(PC)<sup>2</sup> on the training object size, across different initial configurations.</p><div class="simulation-grid">
+<div><div class="demo-pair" id="sim-pair-1" data-pair><div class="pair-videos"><figure class="demo-clip"><div class="clip-label"><strong>PL-MPC</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/ours_rhythmic_insertion_succ-poster.webp" aria-label="PL-MPC: Success"><source src="static/data/videos/ours_rhythmic_insertion_succ.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/ours_rhythmic_insertion_succ.mp4">Download this clip</a>.</video></figure><figure class="demo-clip"><div class="clip-label"><strong>TD-M(PC)<sup>2</sup></strong><span class="outcome ">Timeout</span></div><video controls playsinline muted preload="none" poster="static/images/baseline_rhythmic_insertion_fail-poster.webp" aria-label="TD-M(PC)2: Timeout"><source src="static/data/videos/baseline_rhythmic_insertion_fail.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/baseline_rhythmic_insertion_fail.mp4">Download this clip</a>.</video></figure></div><div class="pair-controls"><button type="button" data-play-pair>Play both ↗</button><button type="button" data-restart-pair>Restart both ↺</button><span>Playback · 1×</span></div></div></div>
+<div><div class="demo-pair" id="sim-pair-3" data-pair><div class="pair-videos"><figure class="demo-clip"><div class="clip-label"><strong>PL-MPC</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/ours_rhythmic_insertion_succ3-poster.webp" aria-label="PL-MPC: Success"><source src="static/data/videos/ours_rhythmic_insertion_succ3.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/ours_rhythmic_insertion_succ3.mp4">Download this clip</a>.</video></figure><figure class="demo-clip"><div class="clip-label"><strong>TD-M(PC)<sup>2</sup></strong><span class="outcome ">Timeout</span></div><video controls playsinline muted preload="none" poster="static/images/baseline_rhythmic_insertion_fail3-poster.webp" aria-label="TD-M(PC)2: Timeout"><source src="static/data/videos/baseline_rhythmic_insertion_fail3.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/baseline_rhythmic_insertion_fail3.mp4">Download this clip</a>.</video></figure></div><div class="pair-controls"><button type="button" data-play-pair>Play both ↗</button><button type="button" data-restart-pair>Restart both ↺</button><span>Playback · 1×</span></div></div></div>
+<div><div class="demo-pair" id="sim-pair-4" data-pair><div class="pair-videos"><figure class="demo-clip"><div class="clip-label"><strong>PL-MPC</strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/ours_rhythmic_insertion_succ4-poster.webp" aria-label="PL-MPC: Success"><source src="static/data/videos/ours_rhythmic_insertion_succ4.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/ours_rhythmic_insertion_succ4.mp4">Download this clip</a>.</video></figure><figure class="demo-clip"><div class="clip-label"><strong>TD-M(PC)<sup>2</sup></strong><span class="outcome success">Success</span></div><video controls playsinline muted preload="none" poster="static/images/baseline_rhythmic_insertion_succ1-poster.webp" aria-label="TD-M(PC)2: Success"><source src="static/data/videos/baseline_rhythmic_insertion_succ1.mp4" type="video/mp4">Your browser does not support embedded video. <a href="static/data/videos/baseline_rhythmic_insertion_succ1.mp4">Download this clip</a>.</video></figure></div><div class="pair-controls"><button type="button" data-play-pair>Play both ↗</button><button type="button" data-restart-pair>Restart both ↺</button><span>Playback · 1×</span></div></div></div>
+</div></details></div></section>
+<section class="section results-section" id="results"><div class="container">
+<p class="eyebrow"><span class="section-number">06</span> THE EVIDENCE</p><div class="section-heading-row"><h2>Largest gains on<br>balance-hard and hurdle.</h2><p class="section-intro">Across 13 HumanoidBench tasks, PL-MPC improves mean return over TD-M(PC)<sup>2</sup> on eight and is lower on five. It remains competitive on four high-dimensional DMControl tasks and achieves higher observed hardware success on each tested object size.</p></div>
+<div class="results-header"><div class="segmented-control" role="tablist" aria-label="Evaluation setting"><button type="button" role="tab" id="humanoid-tab" aria-controls="humanoid-panel" aria-selected="true" tabindex="0">HumanoidBench</button><button type="button" role="tab" id="dmc-tab" aria-controls="dmc-panel" aria-selected="false" tabindex="-1">DMControl</button><button type="button" role="tab" id="hardware-tab" aria-controls="hardware-panel" aria-selected="false" tabindex="-1">Real robot</button></div></div>
+<div id="humanoid-panel" role="tabpanel" aria-labelledby="humanoid-tab"><div class="table-scroll" tabindex="0" role="region" aria-label="HumanoidBench benchmark, scroll horizontally"><table class="results-table benchmark-table"><caption>HumanoidBench · Total Average Return (TAR), mean ± SD across seeds</caption><thead><tr><th scope="col">Task</th><th scope="col">DreamerV3</th><th scope="col">TD-MPC2</th><th scope="col">BMPC</th><th scope="col">BOOM</th><th scope="col">TD-M(PC)<sup>2</sup></th><th scope="col" class="ours-column">PL-MPC</th><th scope="col">Reference</th></tr></thead><tbody>
+<tr><th scope="row">walk</th>
+<td class="">161 <span class="uncertainty">± 45</span></td>
+<td class="">891 <span class="uncertainty">± 43</span></td>
+<td class="">651 <span class="uncertainty">± 34</span></td>
+<td class="best-value">928 <span class="uncertainty">± 16</span></td>
+<td class="">922 <span class="uncertainty">± 8</span></td>
+<td class="ours-column ">911 <span class="uncertainty">± 7</span></td>
+<td>700</td>
+</tr>
+<tr><th scope="row">stand</th>
+<td class="">220 <span class="uncertainty">± 74</span></td>
+<td class="">754 <span class="uncertainty">± 132</span></td>
+<td class="">801 <span class="uncertainty">± 13</span></td>
+<td class="">915 <span class="uncertainty">± 26</span></td>
+<td class="">927 <span class="uncertainty">± 48</span></td>
+<td class="ours-column best-value">933 <span class="uncertainty">± 3</span></td>
+<td>800</td>
+</tr>
+<tr><th scope="row">run</th>
+<td class="">56 <span class="uncertainty">± 11</span></td>
+<td class="">196 <span class="uncertainty">± 122</span></td>
+<td class="">358 <span class="uncertainty">± 152</span></td>
+<td class="">596 <span class="uncertainty">± 63</span></td>
+<td class="best-value">852 <span class="uncertainty">± 8</span></td>
+<td class="ours-column ">658 <span class="uncertainty">± 355</span></td>
+<td>700</td>
+</tr>
+<tr><th scope="row">crawl</th>
+<td class="">504 <span class="uncertainty">± 90</span></td>
+<td class="">822 <span class="uncertainty">± 97</span></td>
+<td class="best-value">922 <span class="uncertainty">± 17</span></td>
+<td class="">855 <span class="uncertainty">± 50</span></td>
+<td class="">899 <span class="uncertainty">± 64</span></td>
+<td class="ours-column ">855 <span class="uncertainty">± 31</span></td>
+<td>700</td>
+</tr>
+<tr><th scope="row">maze</th>
+<td class="">117 <span class="uncertainty">± 6</span></td>
+<td class="">196 <span class="uncertainty">± 36</span></td>
+<td class="">348 <span class="uncertainty">± 9</span></td>
+<td class="">341 <span class="uncertainty">± 2</span></td>
+<td class="">347 <span class="uncertainty">± 9</span></td>
+<td class="ours-column best-value">353 <span class="uncertainty">± 3</span></td>
+<td>1200</td>
+</tr>
+<tr><th scope="row">stair</th>
+<td class="">43 <span class="uncertainty">± 11</span></td>
+<td class="">66 <span class="uncertainty">± 14</span></td>
+<td class="">445 <span class="uncertainty">± 201</span></td>
+<td class="best-value">462 <span class="uncertainty">± 75</span></td>
+<td class="">387 <span class="uncertainty">± 110</span></td>
+<td class="ours-column ">461 <span class="uncertainty">± 12</span></td>
+<td>700</td>
+</tr>
+<tr><th scope="row">slide</th>
+<td class="">19 <span class="uncertainty">± 6</span></td>
+<td class="">210 <span class="uncertainty">± 39</span></td>
+<td class="">498 <span class="uncertainty">± 18</span></td>
+<td class="">858 <span class="uncertainty">± 43</span></td>
+<td class="">902 <span class="uncertainty">± 24</span></td>
+<td class="ours-column best-value">910 <span class="uncertainty">± 7</span></td>
+<td>700</td>
+</tr>
+<tr><th scope="row">sit-simple</th>
+<td class="">268 <span class="uncertainty">± 26</span></td>
+<td class="">359 <span class="uncertainty">± 228</span></td>
+<td class="">695 <span class="uncertainty">± 105</span></td>
+<td class="">882 <span class="uncertainty">± 44</span></td>
+<td class="best-value">932 <span class="uncertainty">± 18</span></td>
+<td class="ours-column ">910 <span class="uncertainty">± 39</span></td>
+<td>750</td>
+</tr>
+<tr><th scope="row">sit-hard</th>
+<td class="">152 <span class="uncertainty">± 20</span></td>
+<td class="">744 <span class="uncertainty">± 165</span></td>
+<td class="">576 <span class="uncertainty">± 44</span></td>
+<td class="">740 <span class="uncertainty">± 209</span></td>
+<td class="best-value">821 <span class="uncertainty">± 64</span></td>
+<td class="ours-column ">635 <span class="uncertainty">± 233</span></td>
+<td>750</td>
+</tr>
+<tr><th scope="row">pole</th>
+<td class="">123 <span class="uncertainty">± 34</span></td>
+<td class="">156 <span class="uncertainty">± 25</span></td>
+<td class="">676 <span class="uncertainty">± 45</span></td>
+<td class="best-value">879 <span class="uncertainty">± 33</span></td>
+<td class="">874 <span class="uncertainty">± 124</span></td>
+<td class="ours-column best-value">879 <span class="uncertainty">± 49</span></td>
+<td>700</td>
+</tr>
+<tr><th scope="row">balance-simple</th>
+<td class="">15 <span class="uncertainty">± 1</span></td>
+<td class="">120 <span class="uncertainty">± 24</span></td>
+<td class="">613 <span class="uncertainty">± 78</span></td>
+<td class="best-value">784 <span class="uncertainty">± 101</span></td>
+<td class="">599 <span class="uncertainty">± 389</span></td>
+<td class="ours-column ">765 <span class="uncertainty">± 176</span></td>
+<td>800</td>
+</tr>
+<tr><th scope="row">hurdle</th>
+<td class="">13 <span class="uncertainty">± 3</span></td>
+<td class="">86 <span class="uncertainty">± 26</span></td>
+<td class="">165 <span class="uncertainty">± 64</span></td>
+<td class="">331 <span class="uncertainty">± 45</span></td>
+<td class="">199 <span class="uncertainty">± 13</span></td>
+<td class="ours-column best-value">466 <span class="uncertainty">± 200</span></td>
+<td>700</td>
+</tr>
+<tr><th scope="row">balance-hard</th>
+<td class="">17 <span class="uncertainty">± 4</span></td>
+<td class="">102 <span class="uncertainty">± 17</span></td>
+<td class="">104 <span class="uncertainty">± 23</span></td>
+<td class="">102 <span class="uncertainty">± 11</span></td>
+<td class="">98 <span class="uncertainty">± 18</span></td>
+<td class="ours-column best-value">387 <span class="uncertainty">± 255</span></td>
+<td>800</td>
+</tr>
+</tbody></table></div>
+<p class="table-note">Training budgets: 2M steps for DreamerV3 and TD-MPC2; 3M for the other methods. Reference denotes the benchmark’s return threshold, which is distinct from task success. Bold marks the highest row mean, including ties.</p>
+<a class="data-link text-link" href="static/data/benchmark.csv" download>Download all benchmark results ↓</a></div>
+<div id="dmc-panel" role="tabpanel" aria-labelledby="dmc-tab"><div class="table-scroll" tabindex="0" role="region" aria-label="DMControl benchmark, scroll horizontally"><table class="results-table benchmark-table"><caption>DMControl · Total Average Return (TAR), mean ± SD across seeds</caption><thead><tr><th scope="col">Task</th><th scope="col">DreamerV3</th><th scope="col">TD-MPC2</th><th scope="col">BMPC</th><th scope="col">BOOM</th><th scope="col">TD-M(PC)<sup>2</sup></th><th scope="col" class="ours-column">PL-MPC</th></tr></thead><tbody>
+<tr><th scope="row">dog-stand</th>
+<td class="">41 <span class="uncertainty">± 9</span></td>
+<td class="">523 <span class="uncertainty">± 421</span></td>
+<td class="">932 <span class="uncertainty">± 21</span></td>
+<td class="best-value">982 <span class="uncertainty">± 7</span></td>
+<td class="">832 <span class="uncertainty">± 99</span></td>
+<td class="ours-column ">976 <span class="uncertainty">± 14</span></td>
+</tr>
+<tr><th scope="row">dog-trot</th>
+<td class="">11 <span class="uncertainty">± 3</span></td>
+<td class="">394 <span class="uncertainty">± 184</span></td>
+<td class="best-value">953 <span class="uncertainty">± 10</span></td>
+<td class="">923 <span class="uncertainty">± 8</span></td>
+<td class="">899 <span class="uncertainty">± 39</span></td>
+<td class="ours-column ">885 <span class="uncertainty">± 78</span></td>
+</tr>
+<tr><th scope="row">humanoid-stand</th>
+<td class="">5 <span class="uncertainty">± 1</span></td>
+<td class="">637 <span class="uncertainty">± 71</span></td>
+<td class="best-value">955 <span class="uncertainty">± 8</span></td>
+<td class="">920 <span class="uncertainty">± 15</span></td>
+<td class="">929 <span class="uncertainty">± 15</span></td>
+<td class="ours-column ">954 <span class="uncertainty">± 2</span></td>
+</tr>
+<tr><th scope="row">humanoid-walk</th>
+<td class="">2 <span class="uncertainty">± 0</span></td>
+<td class="">643 <span class="uncertainty">± 96</span></td>
+<td class="">933 <span class="uncertainty">± 20</span></td>
+<td class="">921 <span class="uncertainty">± 10</span></td>
+<td class="">867 <span class="uncertainty">± 63</span></td>
+<td class="ours-column best-value">947 <span class="uncertainty">± 6</span></td>
+</tr>
+</tbody></table></div>
+<p class="table-note">PL-MPC remains competitive across these four high-dimensional tasks, with the highest mean return on humanoid-walk. Bold marks the highest row mean.</p>
+<a class="data-link text-link" href="static/data/benchmark.csv" download>Download all benchmark results ↓</a></div>
+<div id="hardware-panel" role="tabpanel" aria-labelledby="hardware-tab"><div class="table-scroll" tabindex="0" role="region" aria-label="Hardware results, scroll horizontally"><table class="results-table"><caption>Zero-shot wrench–nut alignment · training size 5 and unseen sizes 3 and 1</caption><thead><tr><th scope="col">Method</th><th scope="col">Size</th><th scope="col">Trials</th><th scope="col">Success ↑</th><th scope="col">95% CI</th><th scope="col">Steps ↓</th><th scope="col">Position (mm)</th><th scope="col">Rotation (°)</th></tr></thead><tbody>
+<tr><th scope="row">TD-M(PC)<sup>2</sup></th><td>5</td><td>31</td><td>61.3%</td><td>43.8–76.3</td><td>53.3 ± 24.4</td><td>11.08 ± 4.31</td><td>7.28 ± 4.26</td></tr>
+<tr class="highlight-row"><th scope="row">PL-MPC <span>Ours</span></th><td>5</td><td>31</td><td>74.2%</td><td>56.8–86.3</td><td>55.9 ± 25.9</td><td>9.86 ± 4.50</td><td>6.14 ± 2.35</td></tr>
+<tr><th scope="row">TD-M(PC)<sup>2</sup></th><td>3</td><td>15</td><td>73.3%</td><td>48.0–89.1</td><td>54.1 ± 16.0</td><td>10.60 ± 4.54</td><td>3.57 ± 1.92</td></tr>
+<tr class="highlight-row"><th scope="row">PL-MPC <span>Ours</span></th><td>3</td><td>15</td><td>80.0%</td><td>54.8–93.0</td><td>47.9 ± 14.6</td><td>11.57 ± 4.41</td><td>4.64 ± 1.55</td></tr>
+<tr><th scope="row">TD-M(PC)<sup>2</sup></th><td>1</td><td>15</td><td>20.0%</td><td>7.0–45.2</td><td>52.0 ± 7.2</td><td>7.89 ± 3.00</td><td>3.69 ± 1.86</td></tr>
+<tr class="highlight-row"><th scope="row">PL-MPC <span>Ours</span></th><td>1</td><td>15</td><td>33.3%</td><td>15.2–58.3</td><td>45.2 ± 7.6</td><td>9.75 ± 3.78</td><td>6.91 ± 3.61</td></tr>
+<tr><th scope="row">TD-M(PC)<sup>2</sup></th><td>Unseen pooled</td><td>30</td><td>46.7%</td><td>30.2–63.9</td><td>53.6 ± 14.3</td><td>10.02 ± 4.31</td><td>3.60 ± 1.84</td></tr>
+<tr class="highlight-row"><th scope="row">PL-MPC <span>Ours</span></th><td>Unseen pooled</td><td>30</td><td>56.7%</td><td>39.2–72.6</td><td>47.1 ± 12.8</td><td>11.03 ± 4.20</td><td>5.31 ± 2.46</td></tr>
+</tbody></table></div><p class="table-note">Success uses all trials, with 95% Wilson intervals. Steps and final pose errors are mean ± sample SD over successful trials only. Size 5 is used during simulation training; sizes 3 and 1 are unseen. Pooled rows combine the two unseen sizes.</p><a class="data-link text-link" href="static/data/hardware-results.csv" download>Download hardware results ↓</a></div>
+<details class="dataset-details evaluation-details"><summary><span>Evaluation protocol</span><span class="detail-plus" aria-hidden="true">+</span></summary><div class="warmup-note"><h3>Humanoid control</h3><p>Each seed’s TAR averages its final five evaluations; tables report mean ± SD across seeds. HumanoidBench comparisons and component ablations use three seeds. The main benchmark uses one fixed PL-MPC configuration, including a 200K-step RAD warmup.</p><h3>Zero-shot hardware deployment</h3><p>One independently trained policy is evaluated per method. Checkpoints are selected in simulation within the first 500K training steps. Hardware success requires seating the wrench around the nut before the 128-step limit; trial counts and 95% Wilson intervals appear in the hardware table.</p><p>A separate 200-episode simulation evaluation on the training size gives 81.0% success for PL-MPC and 67.5% for TD-M(PC)<sup>2</sup>. These episodes are not used for checkpoint selection.</p></div></details>
+<div class="ablation-grid"><article class="evidence-card"><p class="eyebrow">BALANCE-HARD</p><h3>MTD has the largest<br>leave-one-out effect.</h3><p>Removing any component reduces mean TAR. The largest reduction is without MTD: <strong>387 → 186</strong>.</p><div class="mini-chart"><div class="accent"><span>Full PL-MPC</span><div><i style="width:100%"></i></div><strong>387</strong></div><div><span>Without MTD</span><div><i style="width:48.06%"></i></div><strong>186</strong></div><div><span>Without ATE</span><div><i style="width:53.23%"></i></div><strong>206</strong></div><div><span>Without RAD</span><div><i style="width:70.28%"></i></div><strong>272</strong></div></div><p class="small-note">Each comparison removes one component from full PL-MPC. Bars show mean TAR.</p></article>
+<article class="evidence-card"><p class="eyebrow">HURDLE</p><h3>Component effects<br>differ on hurdle.</h3><p>Removing ATE or RAD reduces mean TAR. Removing MTD instead raises the observed mean: <strong>466 → 530</strong>.</p><div class="mini-chart"><div class="accent"><span>Full PL-MPC</span><div><i style="width:87.92%"></i></div><strong>466</strong></div><div><span>Without MTD</span><div><i style="width:100%"></i></div><strong>530</strong></div><div><span>Without ATE</span><div><i style="width:55.85%"></i></div><strong>296</strong></div><div><span>Without RAD</span><div><i style="width:43.58%"></i></div><strong>231</strong></div></div><p class="small-note">Component effects depend on which other mechanisms are active. The table reports mean ± SD and success.</p></article></div>
+<details class="dataset-details" id="ablations"><summary><span>Component ablations and RAD warmup</span><span class="detail-plus" aria-hidden="true">+</span></summary>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Component ablation results, scroll horizontally"><table class="results-table"><caption>Leave-one-out study · three seeds · 200K RAD warmup when enabled</caption><thead><tr><th scope="col">Variant</th><th scope="col">Balance-hard TAR</th><th scope="col">Success</th><th scope="col">Hurdle TAR</th><th scope="col">Success</th></tr></thead><tbody>
+<tr><th scope="row">TD-M(PC)<sup>2</sup></th><td>98 ± 18</td><td>0%</td><td>199 ± 13</td><td>0%</td></tr>
+<tr><th scope="row">Without MTD</th><td>186 ± 51</td><td>0%</td><td>530 ± 275</td><td>47%</td></tr>
+<tr><th scope="row">Without ATE</th><td>206 ± 63</td><td>0%</td><td>296 ± 21</td><td>0%</td></tr>
+<tr><th scope="row">Without RAD</th><td>272 ± 221</td><td>15%</td><td>231 ± 72</td><td>0%</td></tr>
+<tr class="highlight-row"><th scope="row">PL-MPC</th><td>387 ± 255</td><td>19%</td><td>466 ± 200</td><td>19%</td></tr>
+</tbody></table></div><div class="warmup-note"><h3>When imitation starts matters.</h3><p>Delaying RAD from 200K to 750K steps improves crawl, balance-simple, and sit-hard, changes walk and maze little, and reduces return and success on hurdle. No fixed warmup dominates. The main benchmark retains the same 200K setting for all tasks.</p><a class="text-link" href="static/paper/pl-mpc.pdf" target="_blank" rel="noopener">Training diagnostics and warmup study in the paper ↗</a></div></details>
+</div></section>
+<section class="section scope-section" id="scope"><div class="container scope-grid"><div><p class="eyebrow"><span class="section-number">07</span> TAKE-HOME POINTS</p><h2>Closing the loop<br>beyond policy alignment.</h2><p class="conclusion-lead">The planner creates experience. What the critic and actor learn from it shapes the next plan.</p></div><div class="scope-list"><article><h3>Three interfaces, one planning–learning loop.</h3><p>PL-MPC modifies critic supervision with MTD, terminal-value evaluation with ATE, and planner-to-policy transfer with RAD, while retaining the world-model architecture and MPPI optimizer.</p></article><article><h3>Successful behaviors on difficult humanoid tasks.</h3><p>The largest gains occur on balance-hard and hurdle, where successful seeds achieve full-episode balancing and hurdle traversal. Outcomes remain seed dependent, and the ablations show that the mechanisms interact differently across tasks.</p></article><article><h3>Zero-shot transfer to hardware and unseen sizes.</h3><p>The simulation-trained world model supports online planning for real-robot wrench–nut alignment, with higher observed success than TD-M(PC)<sup>2</sup> on the training size and both unseen sizes, without real-world fine-tuning.</p></article></div></div><div class="container"><details class="dataset-details scope-details"><summary><span>Scope and future directions</span><span class="detail-plus" aria-hidden="true">+</span></summary><div class="warmup-note"><p>Return-weighted distillation has limited signal when useful planner trajectories remain rare, as on maze. RAD is also sensitive to its activation schedule, motivating adaptive warmup. The mechanisms have been evaluated on the TD-M(PC)<sup>2</sup> backbone; systematic transfer to other TD-MPC-style methods remains future work.</p></div></details></div></section>
+<section class="resources-section" id="resources"><div class="container resources-inner"><div><p class="eyebrow">EXPLORE THE WORK</p><h2>Beyond policy alignment.</h2><p>The manuscript, supplementary film, presentation, and reported results.<br>Anonymous submission · ICRA 2027</p></div><div class="resource-links"><a href="static/paper/pl-mpc.pdf" target="_blank" rel="noopener"><span><small>MANUSCRIPT</small>Read the paper</span><span>↗</span></a><a href="static/video/pl-mpc-overview.mp4" download><span><small>SUPPLEMENTARY VIDEO · 2:59</small>Download the film</span><span>↓</span></a><a href="static/paper/pl-mpc-slides.pdf" target="_blank" rel="noopener"><span><small>PRESENTATION · 17 SLIDES</small>View the slides</span><span>↗</span></a><a href="static/data/benchmark.csv" download><span><small>REPORTED RESULTS</small>Benchmark data</span><span>↓</span></a><div class="coming-soon"><span>Code release</span><span class="coming-pill">Coming soon</span></div></div></div></section>
+</main>
+
+<footer class="site-footer"><div class="container footer-inner"><a class="brand-text" href="#top"><svg class="trace-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M25 11a11 11 0 1 0 1 10M25 4v8h-8"/><circle cx="26" cy="21" r="3"/></svg>PL-MPC<span class="brand-dot">.</span></a><p>Planning–Learning MPC · Anonymous Authors · ICRA 2027 submission</p><a href="#top">Back to top ↑</a></div><p class="template-credit">Website template adapted from <a href="https://nerfies.github.io/">Nerfies</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></p></footer>
+<dialog id="figure-dialog" aria-labelledby="dialog-title"><div class="dialog-header"><h2 id="dialog-title">Research figure</h2><button type="button" class="dialog-close" aria-label="Close figure">×</button></div><img id="dialog-image" alt=""><a id="dialog-download" download>Download full-resolution figure ↓</a></dialog>
+<noscript><p class="no-script-note">Videos, figures, the paper, and all results are available without JavaScript. Enable JavaScript for tab controls, chapter shortcuts, and paired playback.</p></noscript>
+</body>
+</html>

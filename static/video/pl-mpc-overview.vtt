@@ -1,0 +1,94 @@
+WEBVTT
+
+1
+00:00:00.250 --> 00:00:03.693
+We present PL-MPC: closing the planning–learning loop.
+
+2
+00:00:04.250 --> 00:00:17.891
+TD-MPC plans robot actions using a learned world model. The model predicts
+action outcomes, while a critic estimates return beyond the planning
+horizon. The robot executes one action, then replans.
+
+3
+00:00:19.250 --> 00:00:29.681
+The policy proposes actions. Aligning it with the planner leaves three
+issues: delayed reward propagation, uncertain terminal values, and
+differences in episode quality.
+
+4
+00:00:31.250 --> 00:00:37.692
+Our method modifies all three interfaces, retaining the world-model
+architecture and MPPI optimizer.
+
+5
+00:00:38.250 --> 00:00:42.759
+Prior methods use one-step targets; we use hybrid multi-step targets.
+
+6
+00:00:44.250 --> 00:00:48.692
+Experience updates the world model, critic, and policy, guiding future
+plans.
+
+7
+00:00:49.250 --> 00:01:03.008
+In this illustration, one trajectory falls while the other survives.
+Multi-step targets propagate later rewards sooner, helping the critic
+sharpen the fall–survival boundary. Model predictions complete targets
+beyond replay.
+
+8
+00:01:04.250 --> 00:01:16.701
+After crossing a hurdle, a planned trajectory may enter a less-visited
+region. When target critics disagree there, ATE penalizes the online
+terminal value, reducing reliance on uncertain estimates.
+
+9
+00:01:17.250 --> 00:01:30.550
+RAD gives stronger imitation weight to higher-return episodes, using
+realized returns rather than critic estimates. Warmup delays this
+additional loss, allowing the planner to collect useful trajectories
+first.
+
+10
+00:01:31.250 --> 00:01:43.109
+On balance-hard, the best seed reaches fifty point nine percent success,
+versus zero for the baseline seeds. The planner unlocks full-episode
+balancing, beyond simply raising mean return.
+
+11
+00:01:45.250 --> 00:01:57.205
+On hurdle, the best seed reaches fifty-eight percent success, versus zero
+for the baseline seeds. The planner clears successive obstacles and
+completes the task—a qualitative change in behavior.
+
+12
+00:01:59.250 --> 00:02:07.845
+On other HumanoidBench tasks, performance remains competent, with
+especially large gains on hard tasks such as balance-hard and hurdle.
+
+13
+00:02:09.250 --> 00:02:18.688
+In Isaac Gym, these representative wrench–nut alignment trials compare PL-
+MPC and the baseline across initial object configurations.
+
+14
+00:02:19.250 --> 00:02:30.897
+The world model learned in Isaac Gym is deployed with online planning on
+the real KUKA robot: zero-shot sim-to-real transfer. Contact requires
+closed-loop realignment.
+
+15
+00:02:32.250 --> 00:02:43.691
+Additional PL-MPC trials show different initial configurations, including
+an unseen object size. Planning uses the simulation-trained world model,
+without real-world fine-tuning.
+
+16
+00:02:44.250 --> 00:02:51.470
+The same simulation-trained models support planning for two unseen object
+sizes, with higher observed success.
+
+17
+00:02:56.250 --> 00:02:58.095
+Closing the planning–learning loop.
