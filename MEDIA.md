@@ -35,7 +35,7 @@ or references.
 - `static/paper/pl-mpc-slides.pdf` is an unchanged copy of the final slide PDF.
 - `planning-loop.webp`, `mtd.webp`, `ate.webp`, and `rad.webp` are rendered
   excerpts of slides 6–9 at 2.5× resolution. Scientific colors are preserved.
-- `video-poster.webp` is rendered from slide 14, the hardware comparison.
+- `video-poster.webp` is rendered from slide 1, the title slide, at 1920×1080.
 - `hardware-setup.webp` comes from `slides/assets/setup-hardware.png`.
 - `architecture.webp` is a web export of the complete manuscript figure.
 - Poster images derive from the slide package's existing clip posters.
