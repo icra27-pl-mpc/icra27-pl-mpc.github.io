@@ -42,8 +42,7 @@ All tab content remains readable without JavaScript. All fonts and runtime
 assets are local. Obsolete slides, result exports, and unused assets have been
 removed from the published checkout. The public branch contains the current
 anonymous release.
-The earlier embedded code bundle has also been retired; the page explicitly
-marks the current code release as forthcoming.
+The code links point to the [anonymous repository](https://anonymous.4open.science/r/PL-MPC/README.md).
 
 See `CONTENT_REVIEW.md` for narrative and claim alignment, `MEDIA.md` for source
 provenance, `VALIDATION.md` for checks, and `NOTICE.md` for attribution and licensing.
