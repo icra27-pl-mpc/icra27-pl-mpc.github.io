@@ -1,10 +1,10 @@
 /* Research-page structure adapted from PL-MPC / Nerfies. ICRA 2027 presentation in purple and amber. */
 @font-face{font-family:Outfit;src:url('../fonts/outfit.woff2') format('woff2');font-style:normal;font-weight:100 900;font-display:swap}
 @font-face{font-family:'DM Sans';src:url('../fonts/dm-sans.woff2') format('woff2');font-style:normal;font-weight:100 1000;font-display:swap}
-:root{--text-small:18.2px;--ink:#232129;--muted:#66616d;--primary:#772583;--primary-dark:#5e1d68;--amber:#ffa300;--amber-ink:#8b5300;--paper:#faf9f6;--white:#fff;--soft:#f0e9f2;--line:#e2dfe2;--dark:#211d28;--radius:16px;--font:'DM Sans',Arial,sans-serif;--display:Outfit,'DM Sans',sans-serif}
+:root{--text-small:14px;--ink:#232129;--muted:#66616d;--primary:#772583;--primary-dark:#5e1d68;--amber:#ffa300;--amber-ink:#8b5300;--paper:#faf9f6;--white:#fff;--soft:#f0e9f2;--line:#e2dfe2;--dark:#211d28;--radius:16px;--font:'DM Sans',Arial,sans-serif;--display:Outfit,'DM Sans',sans-serif}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:94px}
-body{margin:0;color:var(--ink);background:var(--paper);font-family:var(--font);font-size:var(--text-small);line-height:1.65;-webkit-font-smoothing:antialiased}
+body{margin:0;color:var(--ink);background:var(--paper);font-family:var(--font);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
 body.dialog-open{overflow:hidden}
 button,input,select{font:inherit}
 button,a{-webkit-tap-highlight-color:transparent}
@@ -352,7 +352,7 @@ dialog::backdrop{background:#160e1dd4;backdrop-filter:blur(4px)}
 @media(max-width:600px){.abstract-section{padding:40px 0 45px}.abstract-grid{gap:24px}.abstract-heading h2{font-size:33px;margin-top:13px}.abstract-heading>a{font-size:var(--text-small)}.abstract-copy{padding-left:18px}.abstract-copy p{font-size:var(--text-small);line-height:1.9}.setup-explainer{grid-template-columns:1fr;gap:0;margin-top:23px}.setup-explainer dt{font-size:var(--text-small)}.setup-explainer dd{font-size:var(--text-small)}.problem-grid:has(.setup-explainer) .hardware-figure{max-width:390px}.related-grid{grid-template-columns:1fr;gap:0}.related-topic{padding:24px 0}.related-topic h3{font-size:25px}.related-topic>p:not(.topic-index){font-size:var(--text-small)}.related-source-note{font-size:var(--text-small)}.architecture-intro{font-size:var(--text-small);margin-bottom:20px;padding-inline:5px}.architecture-walkthrough{grid-template-columns:1fr;gap:25px;margin-top:22px;padding-top:24px;padding-inline:5px}.architecture-walkthrough h4{font-size:20px}.architecture-summary{display:grid;grid-template-columns:1fr;gap:5px;padding:15px;font-size:var(--text-small)}.architecture-summary strong:nth-of-type(2){margin-top:9px}.training-walkthrough{grid-template-columns:1fr;gap:23px;padding-inline:5px}.training-walkthrough h4{font-size:21px;margin:10px 0}.training-objective{font-size:var(--text-small);padding-inline:5px}.navbar-menu{gap:16px 22px}}
 @media(max-width:360px){.scene-tabs{gap:3px}.scene-tabs button{width:24px}.gallery-arrows button{width:25px}.gallery-arrows{gap:3px}.gallery-controls{gap:5px}.hero-bottom{font-size:var(--text-small);letter-spacing:.8px}.button{padding-inline:9px}}
 /* Readability: 14px minimum for UI and supporting text, 16px for prose. */
-.hero-description,.transcript>div,.abstract-copy p,.problem-copy>p:not(.eyebrow):not(.lead),.question-callout p,.setup-explainer dd,.related-topic>p:not(.topic-index),.method-steps p,.method-note p,.architecture-intro,.architecture-walkthrough p,.training-walkthrough p,.training-objective,.story-copy>p:not([class]),.story-hook,.limitation p,.result-takeaway p,.evidence-card>p:not(.eyebrow):not(.small-note),.dataset-grid p,.scope-list p,.resources-inner p:not(.eyebrow){font-size:var(--text-small)}
+.hero-description,.transcript>div,.abstract-copy p,.problem-copy>p:not(.eyebrow):not(.lead),.question-callout p,.setup-explainer dd,.related-topic>p:not(.topic-index),.method-steps p,.method-note p,.architecture-intro,.architecture-walkthrough p,.training-walkthrough p,.training-objective,.story-copy>p:not([class]),.story-hook,.limitation p,.result-takeaway p,.evidence-card>p:not(.eyebrow):not(.small-note),.dataset-grid p,.scope-list p,.resources-inner p:not(.eyebrow){font-size:16px}
 .hero-bottom{color:var(--muted);letter-spacing:1px}
 .film-top{flex-wrap:wrap;gap:8px 20px}
 .gallery-top{gap:12px}

@@ -1,3 +1,4 @@
+sup{font-size:max(13px,.75em)}
 .publication-title{max-width:1030px}
 .hero-body{padding-top:36px;padding-bottom:35px}
 .trace-wordmark{font-size:90px;letter-spacing:-5px;margin:15px 0}
@@ -16,7 +17,7 @@
 .demo-pair{min-width:0}
 .pair-videos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
 .demo-clip{min-width:0;margin:0;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff}
-.clip-label{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:7px;padding:10px 14px;line-height:1.5;min-height:50px}
+.clip-label{font-size:var(--text-small);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:7px;padding:10px 14px;line-height:1.5;min-height:50px}
 .pair-videos .demo-clip:first-child{border-color:#c7a4d0}
 .pair-videos .demo-clip:first-child .clip-label{background:#f4ebf6;color:var(--primary)}
 .clip-label strong{font-weight:600}
@@ -24,14 +25,14 @@
 .outcome.success{color:#006835}
 .demo-clip video{width:100%;aspect-ratio:1;object-fit:contain;background:#e5e5e5}
 .robot-section .demo-clip video,.hardware-extras .demo-clip video{aspect-ratio:4/3}
-.pair-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:13px}
+.pair-controls{font-size:var(--text-small);display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:13px}
 .pair-controls button{background:#fff;border:1px solid var(--line);border-radius:5px;padding:7px 12px;min-height:44px}
 .pair-controls button:hover{border-color:var(--primary);color:var(--primary)}
 .pair-controls>span{margin-left:auto;color:var(--muted)}
 .demo-caption{margin:23px 0 9px}
-.result-line{color:var(--muted);margin:0}
+.result-line{font-size:var(--text-small);color:var(--muted);margin:0}
 .result-line strong{color:var(--primary);font-weight:600}
-.scope-note{color:var(--muted);border-top:1px solid var(--line);padding-top:21px;margin-top:25px}
+.scope-note{font-size:13px;line-height:1.6;color:var(--muted);border-top:1px solid var(--line);padding-top:21px;margin-top:25px}
 .scope-note a{color:var(--primary);text-decoration:underline;text-underline-offset:3px}
 .robot-section{background:#f5f0f6;border-block:1px solid var(--line)}
 .more-section{padding:30px 0}
@@ -57,8 +58,8 @@ html:not(.enhanced) .demo-panel+.demo-panel{margin-top:45px}
 @media(max-width:600px){
  .hero-body{padding-top:26px}.trace-wordmark{font-size:66px;letter-spacing:-4px}.publication-title{font-size:25px;line-height:1.25}.hero-description{max-width:340px}.section-topline{display:block}.section-topline h2{margin-bottom:8px}.section-topline .eyebrow{display:none}
  .demo-heading h2{font-size:31px}.section{padding-block:43px}.pair-videos{gap:9px}.clip-label{display:block;padding:9px 8px;min-height:76px}.clip-label .outcome{display:block;margin-top:3px}.demo-clip video{aspect-ratio:1}.pair-controls{gap:8px}.pair-controls>span{margin:0;flex-basis:100%}.pair-controls button{padding-inline:10px}
- .segmented-control{padding:4px;gap:3px}.segmented-control button{font-size:17px;padding:9px 8px}.demo-panel h3{font-size:22px}.demo-caption{margin-top:19px}.film-chapters button{padding:13px 11px;font-size:17px}.film-chapters span{display:block;margin-bottom:4px}.film-caption{display:block}.film-caption a{display:inline-block;margin-top:10px}
- .more-demos>summary{font-size:21px}.more-demos>summary>span{float:none;display:block;margin-top:5px}.rollout-grid{grid-template-columns:1fr}.hardware-extras .demo-clip video{aspect-ratio:4/3}.rollout-grid .clip-label{display:flex;min-height:50px}.rollout-grid .outcome{margin:0}.resource-links{width:100%}.resources-inner h2{font-size:32px}
+ .segmented-control{padding:4px;gap:3px}.segmented-control button{font-size:var(--text-small);padding:9px 8px}.demo-panel h3{font-size:22px}.demo-caption{margin-top:19px}.film-chapters button{padding:13px 11px;font-size:var(--text-small)}.film-chapters span{display:block;margin-bottom:4px}.film-caption{display:block}.film-caption a{display:inline-block;margin-top:10px}
+ .more-demos>summary{font-size:21px}.more-demos>summary>span{float:none;display:block;margin-top:5px}.rollout-grid{grid-template-columns:1fr}.hardware-extras .demo-clip video{aspect-ratio:4/3}.rollout-grid .clip-label{font-size:var(--text-small);display:flex;min-height:50px}.rollout-grid .outcome{margin:0}.resource-links{width:100%}.resources-inner h2{font-size:32px}
 }
 
 .hardware-extras{display:grid;grid-template-columns:1fr;gap:32px;max-width:900px;margin:auto}
