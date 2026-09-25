@@ -56,7 +56,7 @@ document.querySelectorAll('[role="tablist"]').forEach(wireTabs);
 
 // Make component links and direct URLs reveal the associated panel before scrolling.
 function revealHash() {
-  const aliases = { '#real-demos': '#robot', '#code': '#resources', '#matched': '#results', '#details': '#scope' };
+  const aliases = { '#real-demos': '#robot', '#code': '#resources', '#matched': '#comparisons', '#details': '#resources', '#abstract': '#overview', '#problem': '#overview', '#method': '#overview', '#results': '#comparisons', '#scope': '#resources' };
   const hash = aliases[location.hash] || location.hash;
   const target = document.getElementById(hash.slice(1));
   if (!target) return;
@@ -144,30 +144,4 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) document.querySelectorAll('video').forEach(video => video.pause());
 });
 
-// Native dialog supplies focus trapping and Escape dismissal.
-const dialog = document.querySelector('#figure-dialog');
-let figureOpener = null;
-document.querySelectorAll('[data-figure]').forEach(button => {
-  button.addEventListener('click', () => {
-    figureOpener = button;
-    const img = document.querySelector('#dialog-image');
-    img.src = button.dataset.figure;
-    img.alt = button.querySelector('img').alt;
-    document.querySelector('#dialog-title').textContent = button.dataset.title;
-    document.querySelector('#dialog-download').href = button.dataset.figure;
-    dialog.showModal();
-    document.body.classList.add('dialog-open');
-  });
-});
-dialog.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
-dialog.addEventListener('click', event => {
-  const bounds = dialog.getBoundingClientRect();
-  if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
-});
-dialog.addEventListener('close', () => {
-  document.body.classList.remove('dialog-open');
-  figureOpener?.focus({ preventScroll: true });
-});
-
-// A figure remains directly accessible when JavaScript is unavailable.
 document.documentElement.classList.add('enhanced');
