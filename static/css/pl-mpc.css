@@ -60,3 +60,8 @@ html:not(.enhanced) .demo-panel+.demo-panel{margin-top:45px}
  .segmented-control{padding:4px;gap:3px}.segmented-control button{font-size:17px;padding:9px 8px}.demo-panel h3{font-size:22px}.demo-caption{margin-top:19px}.film-chapters button{padding:13px 11px;font-size:17px}.film-chapters span{display:block;margin-bottom:4px}.film-caption{display:block}.film-caption a{display:inline-block;margin-top:10px}
  .more-demos>summary{font-size:21px}.more-demos>summary>span{float:none;display:block;margin-top:5px}.rollout-grid{grid-template-columns:1fr}.hardware-extras .demo-clip video{aspect-ratio:4/3}.rollout-grid .clip-label{display:flex;min-height:50px}.rollout-grid .outcome{margin:0}.resource-links{width:100%}.resources-inner h2{font-size:32px}
 }
+
+.hardware-extras{display:grid;grid-template-columns:1fr;gap:32px;max-width:900px;margin:auto}
+.extra-hardware-case h3{font-size:22px;font-weight:500;margin:0 0 17px}
+.extra-single{max-width:440px;width:100%}
+.hardware-extras .demo-clip video{aspect-ratio:4/3}
